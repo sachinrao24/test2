@@ -51,7 +51,7 @@ documents = mongodbhandler.read_data(query)
 locations_counter = Counter()
 for doc in documents:
     date_str = doc.get('date')
-    if isinstance(date_str, str):
+    if isinstance(date_str, str) and isinstance(loc, str):
         date_obj = datetime.strptime(date_str, "%d/%m/%Y")
         if thirty_days_ago <= date_obj <= today:
             locations_counter.update(doc['locations'])
