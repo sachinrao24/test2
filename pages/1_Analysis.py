@@ -53,7 +53,6 @@ query = {
     'locations': {'$exists': True}
 }
 
-documents = collection.find(query)
 
 # Count the frequency of each location
 locations_counter = Counter()
