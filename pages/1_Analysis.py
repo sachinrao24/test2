@@ -45,38 +45,3 @@ if top_10_diseases:
 else:
     st.write("No diseases available for the past 30 days.")
 
-today = datetime.now()
-thirty_days_ago = today - timedelta(days=30)
-
-query = {
-    'date': {'$gte': '14-Jul-2023'},  # Assuming 'date' is in the format 'dd-mmm-yyyy'
-    'locations': {'$exists': True}
-}
-
-
-# Count the frequency of each location
-locations_counter = Counter()
-for doc in documents:
-    date_str = doc.get('date')
-    if isinstance(date_str, str):
-        date_obj = datetime.strptime(date_str, "%d-%b-%Y")
-        if thirty_days_ago <= date_obj <= today:
-            locations = doc.get('locations')
-            if locations is not None:
-                locations_counter.update(locations)
-
-top_10_locations = locations_counter.most_common(10)
-
-if top_10_locations:
-    locations, frequencies = zip(*top_10_locations)
-
-    sorted_indices = sorted(range(len(frequencies)), key=lambda k: frequencies[k], reverse=True)
-    sorted_locations = [locations[i] for i in sorted_indices]
-    sorted_frequencies = [frequencies[i] for i in sorted_indices]
-
-    chart_data = pd.DataFrame(data={'Location': sorted_locations, 'Frequency': sorted_frequencies})
-    st.title('Top 10 Frequently Occurring Locations in the Month of July')
-    st.bar_chart(chart_data, x='Location', y='Frequency')
-
-else:
-    st.write("No locations available for the past 30 days.")
