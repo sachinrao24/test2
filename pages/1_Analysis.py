@@ -45,3 +45,29 @@ if top_10_diseases:
 else:
     st.write("No diseases available for the past 30 days.")
 
+query = {"locations": {"$exists": True}}
+documents = mongodbhandler.read_data(query)
+
+locations_counter = Counter()
+for doc in documents:
+    date_str = doc.get('date')
+    if isinstance(doc['locations'], list) and isinstance(date_str, str):
+        date_obj = datetime.strptime(date_str, "%d/%m/%Y")
+        if thirty_days_ago <= date_obj <= today:
+            locations_counter.update(doc['locations'])
+
+top_10_locations = locations_counter.most_common(10)
+
+if top_10_locations:
+    locations, frequencies = zip(*top_10_locations)
+
+    sorted_indices = sorted(range(len(frequencies)), key=lambda k: frequencies[k], reverse=True)
+    sorted_locations = [locations[i] for i in sorted_indices]
+    sorted_frequencies = [frequencies[i] for i in sorted_indices]
+
+    chart_data = pd.DataFrame(data={'Location':locations, 'Frequency':frequencies})
+    st.subheader('Top 10 Frequently Occurring Locations in the Month of July')
+    st.bar_chart(chart_data, x='Location', y='Frequency')
+
+else:
+    st.write("No locations available for the past 30 days.")
