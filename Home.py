@@ -26,6 +26,8 @@ def sort_and_display(documents):
         return (string != string)
 
     for doc in sorted_documents:
+        if type(doc['date']) != str or type(doc['category']) != str:
+            continue
         try:
             date = doc['date']
             article_links = doc['article_links']
