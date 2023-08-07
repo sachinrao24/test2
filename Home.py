@@ -26,15 +26,7 @@ def sort_and_display(documents):
         return (string != string)
 
     for doc in sorted_documents:
-        # if doc['scraped_from'] == 'IDSP':
-        #     continue
-        # if 'category' not in doc or 'date' not in doc:
-        #     continue
-        # if type(doc['date']) != str or type(doc['category']) != str:
-        #     continue
         try:
-            if type(doc['date']) != str or type(doc['category']) != str:
-                continue
             date = doc['date']
             article_links = doc['article_links']
             try:
