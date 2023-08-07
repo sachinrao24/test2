@@ -30,8 +30,8 @@ def sort_and_display(documents):
         #     continue
         # if 'category' not in doc or 'date' not in doc:
         #     continue
-        if type(doc['date']) != str or type(doc['category']) != str:
-            continue
+        # if type(doc['date']) != str or type(doc['category']) != str:
+        #     continue
         try:
             if type(doc['date']) != str or type(doc['category']) != str:
                 continue
