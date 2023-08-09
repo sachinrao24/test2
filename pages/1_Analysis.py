@@ -5,6 +5,7 @@ import pandas as pd
 from collections import Counter
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
+import logging
 import os
 import sys
 sys.path.insert(1, '.')
@@ -72,5 +73,5 @@ try:
     
     else:
         st.write("No locations available for the past 30 days.")
-except:
-    continue
+except Exception as ex:
+    logging.error(ex)
