@@ -29,6 +29,8 @@ def sort_and_display(documents):
 
     for doc in sorted_documents:
         try:
+            if doc['scraped_from'] == 'IDSP':
+                continue
             if 'category' not in doc or 'date' not in doc:
                 continue
             if type(doc['date']) != str or type(doc['category']) != str:
