@@ -12,7 +12,7 @@ def sort_and_display(documents):
 
     try:
         # Convert the date format for sorting
-        documents = [doc for doc in documents if ('date' in doc and type(doc['date']) == str)]
+        documents = [doc for doc in documents if ('date' in doc and type(doc['date']) == str and doc['scraped_from'] != 'IDSP')]
         for doc in documents:
             doc['date'] = datetime.strptime(doc['date'], '%d/%m/%Y')
             doc['date'] = doc['date'].strftime('%d-%B-%Y')
