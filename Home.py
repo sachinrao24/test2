@@ -48,14 +48,14 @@ def sort_and_display(documents):
             elif isinstance(category_key, list):
                 category_string += str(category_key).strip('[]').replace("'", "")
             
-            keys_to_check = ['sign_symptom', 'disease_disorder', 'locations', 'lab_value', 'summary', 'title']
+            keys_to_check = ['sign_symptom', 'disease_disorder', 'locations', 'numeric_value', 'summary', 'title']
             keys_found = []
             not_found_messages = {
                 'summary': "No summary available.",
                 'disease_disorder': "No diseases found.",
                 'sign_symptom': "No symptoms found.",
                 'locations': "No locations found.",
-                'lab_value': "No numeric entities found.",
+                'numeric_value': "No numeric entities found.",
                 'title': "No title found."
             }
 
@@ -64,7 +64,7 @@ def sort_and_display(documents):
                     if isNaN(doc[key]):
                         keys_found.append(not_found_messages.get(key))
                     else:
-                        if key in ['disease_disorder', 'locations', 'sign_symptom', 'lab_value'] and type(doc[key]) == list:
+                        if key in ['disease_disorder', 'locations', 'sign_symptom', 'numeric_value'] and type(doc[key]) == list:
                             if len(doc[key]) > 0:
                                 doc[key] = set(doc[key])
                             else:
@@ -90,7 +90,7 @@ def sort_and_display(documents):
                     st.write(f'Potential symptoms: :{sentiment_color}[{value}]')
                 elif key == 'locations':
                     st.write(f'Potential locations: :{sentiment_color}[{value}]')
-                elif key == 'lab_value':
+                elif key == 'numeric_value':
                     st.write(f'Numeric values: :{sentiment_color}[{value}]')
 
             st.write("Full article: ", article_links)
