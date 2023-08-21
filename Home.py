@@ -15,9 +15,13 @@ def sort_and_display(documents):
         # Convert the date format for sorting
         documents = [doc for doc in documents if ('date' in doc and type(doc['date']) == str)]
         for doc in documents:
-            doc['date'] = datetime.strptime(doc['date'], '%d/%m/%Y')
-            doc['date'] = doc['date'].strftime('%d-%B-%Y')
-            doc['datetime_object'] = datetime.strptime(doc['date'], '%d-%B-%Y').date()
+            try:
+                doc['date'] = datetime.strptime(doc['date'], '%d/%m/%Y')
+                doc['date'] = doc['date'].strftime('%d-%B-%Y')
+                doc['datetime_object'] = datetime.strptime(doc['date'], '%d-%B-%Y').date()
+            except Exception as ex:
+                logging.error(ex)
+                continue
 
         # Sort the documents in descending order by the 'date' key
         sorted_documents = sorted(documents, key=lambda x: x['datetime_object'], reverse=True)
