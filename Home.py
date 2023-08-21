@@ -8,6 +8,7 @@ sys.path.insert(1, 'Pipeline/')
 from handlers.MongoDBHandler import MongoDBHandler
 
 def sort_and_display(documents):
+    sorted_documents = []
     st.divider()
 
     try:
