@@ -18,6 +18,7 @@ def sort_and_display(documents):
             try:
                 doc['date'] = datetime.strptime(doc['date'], '%d/%m/%Y')
                 doc['date'] = doc['date'].strftime('%d-%B-%Y')
+                logging.error(type(doc))
                 doc['datetime_object'] = datetime.strptime(doc['date'], '%d-%B-%Y').date()
             except Exception as ex:
                 logging.error(ex)
