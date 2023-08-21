@@ -22,6 +22,7 @@ def sort_and_display(documents):
             except Exception as ex:
                 logging.error(ex)
                 doc['date'] = datetime.strptime(doc['date'], '%d.%m.%Y')
+                doc['date'] = doc['date'].strftime('%d-%B-%Y')
                 doc['datetime_object'] = datetime.strptime(doc['date'], '%d-%B-%Y').date()
 
         # Sort the documents in descending order by the 'date' key
