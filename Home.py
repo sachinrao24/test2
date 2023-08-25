@@ -1,11 +1,39 @@
 import streamlit as st
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 import logging
-from datetime import datetime
 from dotenv import load_dotenv
 import os
 import sys
 sys.path.insert(1, 'Pipeline/')
 from handlers.MongoDBHandler import MongoDBHandler
+
+def filter_documents(documents, timespan):
+    filtered_documents = []  # Initialize an empty list to store filtered documents
+    
+    for doc in documents:
+        if isinstance(doc['date'], str):  # Use isinstance() instead of type()
+            try:
+                doc['datetime_object'] = datetime.strptime(doc['date'], '%d/%m/%Y')
+            except Exception as ex:
+                logging.error(ex)
+    
+    try:
+        if timespan == 'this month':
+            start_date = datetime.now().replace(day=1)
+        elif timespan == 'past 3 months':
+            start_date = datetime.now() - relativedelta(months=3)
+        elif timespan == 'past 6 months':
+            start_date = datetime.now() - relativedelta(months=6)
+        elif timespan == 'past 1 year':
+            start_date = datetime.now() - relativedelta(years=1)
+        
+        if start_date:
+            filtered_documents = [doc for doc in documents if ('datetime_object' in doc and doc['datetime_object'] >= start_date)]
+    except Exception as ex:
+        logging.error(ex)
+    
+    return filtered_documents
 
 def sort_and_display(documents):
     sorted_documents = []
@@ -13,7 +41,7 @@ def sort_and_display(documents):
 
     try:
         # Convert the date format for sorting
-        documents = [doc for doc in documents if ('date' in doc and type(doc['date']) == str)]
+        documents = [doc for doc in documents if ('date' in doc and 'sentiment_score' in doc and type(doc['date']) == str)]
         for doc in documents:
             try:
                 doc['date'] = datetime.strptime(doc['date'], '%d/%m/%Y')
@@ -21,12 +49,9 @@ def sort_and_display(documents):
                 doc['datetime_object'] = datetime.strptime(doc['date'], '%d-%B-%Y').date()
             except Exception as ex:
                 logging.error(ex)
-                doc['date'] = datetime.strptime(doc['date'], '%d.%m.%Y')
-                doc['date'] = doc['date'].strftime('%d-%B-%Y')
-                doc['datetime_object'] = datetime.strptime(doc['date'], '%d-%B-%Y').date()
 
         # Sort the documents in descending order by the 'date' key
-        sorted_documents = sorted(documents, key=lambda x: x['datetime_object'], reverse=True)
+        sorted_documents = sorted(documents, key=lambda x: (x['datetime_object'], x['sentiment_score']), reverse=True)
 
     except Exception as ex:
             logging.error(ex)
@@ -117,7 +142,25 @@ def main():
 
     documents = list(mongodbhandler.read_data())
 
-    sort_and_display(documents)
+    st.write()
+    
+    col1, col2, col3 = st.columns([3, 4.5, 8])
+    if "visibility" not in st.session_state:
+        st.session_state.visibility = "collapsed"
+        st.session_state.disabled = False
+    
+    with col1:
+        st.write('Select date range: ')
+    with col2:
+        timespan = st.selectbox(
+            "Select Timespan:", ['this month', 'past 3 months', 'past 6 months', 'past 1 year', 'all time'],
+            label_visibility=st.session_state.visibility,
+            disabled=st.session_state.disabled,
+            key='articles_time_option'
+        )
+    filtered_documents = filter_documents(documents, timespan)
+
+    sort_and_display(filtered_documents)
 
 if __name__ == "__main__":
     main()
