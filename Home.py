@@ -102,7 +102,7 @@ def sort_and_display(documents):
                             else:
                                 keys_found.append(not_found_messages.get(key))
                                 continue
-                        keys_found.append(str(doc[key]).strip('[]').strip('{}'))
+                        keys_found.append(str(doc[key]).strip('[]').strip('{}').replace("'", ""))
                 else:
                     keys_found.append(not_found_messages.get(key))
                 
@@ -123,6 +123,7 @@ def sort_and_display(documents):
                 elif key == 'locations':
                     st.write(f'Potential locations: :{sentiment_color}[{value}]')
                 elif key == 'numeric_value':
+                    print('Type of value: ', type(value))
                     st.write(f'Numeric values: :{sentiment_color}[{value}]')
 
             st.write("Full article: ", article_links)
@@ -143,19 +144,16 @@ def main():
     documents = list(mongodbhandler.read_data())
 
     st.write()
-    
-    col1, col2, col3 = st.columns([3, 4.5, 8])
-    if "visibility" not in st.session_state:
-        st.session_state.visibility = "hidden"
-        st.session_state.disabled = False
+
+    col1, col2, _ = st.columns([3, 4.5, 8])
     
     with col1:
         st.write('Select date range: ')
     with col2:
         timespan = st.selectbox(
             "Select Timespan:", ['this month', 'past 3 months', 'past 6 months', 'past 1 year', 'all time'],
-            label_visibility=st.session_state.visibility,
-            disabled=st.session_state.disabled,
+            label_visibility='collapsed',
+            disabled=False,
             key='articles_time_option'
         )
     filtered_documents = filter_documents(documents, timespan)
