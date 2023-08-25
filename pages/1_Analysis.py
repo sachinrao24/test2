@@ -51,9 +51,8 @@ locations_counter = Counter()
 # Streamlit configuration
 col1, col2, col3, col4 = st.columns([1, 1.7, 5.5, 1.7])
 
-if "visibility" not in st.session_state:
-    st.session_state.visibility = "hidden"
-    st.session_state.disabled = False
+st.session_state.visibility = "hidden"
+st.session_state.disabled = False
 
 time_dict = {
     '7 days': 7,
