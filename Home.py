@@ -146,7 +146,7 @@ def main():
     
     col1, col2, col3 = st.columns([3, 4.5, 8])
     if "visibility" not in st.session_state:
-        st.session_state.visibility = "collapsed"
+        st.session_state.visibility = "hidden"
         st.session_state.disabled = False
     
     with col1:
