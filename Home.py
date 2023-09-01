@@ -28,7 +28,7 @@ def filter_documents(documents, timespan):
         elif timespan == 'past 1 year':
             start_date = datetime.now() - relativedelta(years=1)
 
-        print(start_date)
+        logging.error(start_date)
         if start_date:
             filtered_documents = [doc for doc in documents if ('datetime_object' in doc and doc['datetime_object'] >= start_date)]
     except Exception as ex:
