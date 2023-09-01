@@ -20,7 +20,7 @@ def filter_documents(documents, timespan):
     
     try:
         if timespan == 'this month':
-            start_date = datetime.now().replace(day=1)
+            start_date = datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
         elif timespan == 'past 3 months':
             start_date = datetime.now() - relativedelta(months=3)
         elif timespan == 'past 6 months':
