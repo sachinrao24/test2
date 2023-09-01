@@ -123,7 +123,6 @@ def sort_and_display(documents):
                 elif key == 'locations':
                     st.write(f'Potential locations: :{sentiment_color}[{value}]')
                 elif key == 'numeric_value':
-                    print('Type of value: ', type(value))
                     st.write(f'Numeric values: :{sentiment_color}[{value}]')
 
             st.write("Full article: ", article_links)
