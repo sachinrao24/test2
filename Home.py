@@ -1,5 +1,6 @@
 import streamlit as st
 from datetime import datetime, timedelta
+import pandas as pd
 from dateutil.relativedelta import relativedelta
 import logging
 from dotenv import load_dotenv
@@ -20,15 +21,14 @@ def filter_documents(documents, timespan):
     
     try:
         if timespan == 'this month':
-            start_date = datetime.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+            start_date = datetime.now().replace(day=1)
         elif timespan == 'past 3 months':
             start_date = datetime.now() - relativedelta(months=3)
         elif timespan == 'past 6 months':
             start_date = datetime.now() - relativedelta(months=6)
         elif timespan == 'past 1 year':
             start_date = datetime.now() - relativedelta(years=1)
-
-        logging.error(start_date)
+        
         if start_date:
             filtered_documents = [doc for doc in documents if ('datetime_object' in doc and doc['datetime_object'] >= start_date)]
     except Exception as ex:
@@ -100,10 +100,19 @@ def sort_and_display(documents):
                         if key in ['disease_disorder', 'locations', 'sign_symptom', 'numeric_value'] and type(doc[key]) == list:
                             if len(doc[key]) > 0:
                                 doc[key] = set(doc[key])
+                                if key == 'numeric_value':
+                                    numeric_values_list = []
+                                    value = doc[key]
+                                    for entity in value:
+                                        number_and_qualifying_words = entity.split(': ')
+                                        numeric_values_list.append(number_and_qualifying_words)
                             else:
                                 keys_found.append(not_found_messages.get(key))
                                 continue
-                        keys_found.append(str(doc[key]).strip('[]').strip('{}').replace("'", ""))
+                        if key == 'numeric_value':
+                            keys_found.append(numeric_values_list)
+                        else:
+                            keys_found.append(str(doc[key]).strip('[]').strip('{}'))
                 else:
                     keys_found.append(not_found_messages.get(key))
                 
@@ -112,20 +121,28 @@ def sort_and_display(documents):
                     st.subheader(value)
             st.write(category_string)
 
+            skip_entities = False
             for key, value in zip(keys_to_check, keys_found):
                 if key == 'summary':
                     st.markdown(f"**:blue[{date}:]** :{sentiment_color}[{value}]")
-            
-            for key, value in zip(keys_to_check, keys_found):
-                if key == 'disease_disorder':
-                    st.write(f'Potential diseases: :{sentiment_color}[{value}]')
-                elif key == 'sign_symptom':
-                    st.write(f'Potential symptoms: :{sentiment_color}[{value}]')
-                elif key == 'locations':
-                    st.write(f'Potential locations: :{sentiment_color}[{value}]')
-                elif key == 'numeric_value':
-                    st.write(f'Numeric values: :{sentiment_color}[{value}]')
+                    if value == 'No summary available.' or value == 'Text could not be translated.':
+                        skip_entities = True
 
+            if not skip_entities:
+                for key, value in zip(keys_to_check, keys_found):
+                    if key == 'disease_disorder':
+                        st.write(f'Potential diseases: :{sentiment_color}[{value}]')
+                    elif key == 'sign_symptom':
+                        st.write(f'Potential symptoms: :{sentiment_color}[{value}]')
+                    elif key == 'locations':
+                        st.write(f'Potential locations: :{sentiment_color}[{value}]')
+                    elif key == 'numeric_value':
+                        st.write('Numeric entities: ')
+                        table_data = pd.DataFrame([{'Number': entity_list[0], 'Related words': entity_list[1]} for entity_list in numeric_values_list])
+                        table_date_without_index = table_data.style.hide(axis='index')
+                        st.write(table_date_without_index.to_html(), unsafe_allow_html=True)
+                        st.text('')
+                        
             st.write("Full article: ", article_links)
 
             st.divider()
