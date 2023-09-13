@@ -95,7 +95,7 @@ for doc in disease_documents:
         except Exception as ex:
             logging.error(ex)
         disease_list = [d.lower() for d in doc['disease_disorder']]
-        if 'infection' in disease_list or if 'death' in disease_list:
+        if 'infection' in disease_list or 'death' in disease_list:
             continue
         if time_period <= date_obj <= today:
             diseases_counter.update(doc['disease_disorder'])
