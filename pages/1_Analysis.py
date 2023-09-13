@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from fuzzywuzzy import fuzz
 from collections import Counter
 import pandas as pd
+import logging
 import os
 import sys
 sys.path.insert(1, '.')
@@ -89,7 +90,10 @@ time_period = today - timedelta(days=time_dict.get(diseases_time_option))
 for doc in disease_documents:
     date_str = doc.get('date')
     if isinstance(date_str, str):
-        date_obj = datetime.strptime(date_str, "%d/%m/%Y")
+        try:
+            date_obj = datetime.strptime(date_str, "%d/%m/%Y")
+        except Exception as ex:
+            logging.error(ex)
         if time_period <= date_obj <= today:
             diseases_counter.update(doc['disease_disorder'])
 
@@ -139,7 +143,10 @@ time_period = today - timedelta(days=time_dict.get(locations_time_option))
 for doc in location_documents:
     date_str = doc.get('date')
     if isinstance(doc['locations'], list) and isinstance(date_str, str):
-        date_obj = datetime.strptime(date_str, "%d/%m/%Y")
+        try:
+            date_obj = datetime.strptime(date_str, "%d/%m/%Y")
+        except Exception as ex:
+            logging.error(ex)
         if time_period <= date_obj <= today:
             locations_counter.update(doc['locations'])
 
