@@ -92,6 +92,7 @@ def sort_and_display(documents):
                 'title': "No title found."
             }
 
+            skip_document = False
             for key in keys_to_check:
                 if key in doc:
                     if isNaN(doc[key]):
@@ -115,6 +116,11 @@ def sort_and_display(documents):
                             keys_found.append(str(doc[key]).strip('[]').strip('{}'))
                 else:
                     keys_found.append(not_found_messages.get(key))
+                    if key == 'summary' and not_found_messages[key] == doc[key]:
+                        skip_document = True
+                        
+            if skip_document:
+                continue
                 
             for key, value in zip(keys_to_check, keys_found):
                 if key == 'title':
