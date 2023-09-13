@@ -94,6 +94,9 @@ for doc in disease_documents:
             date_obj = datetime.strptime(date_str, "%d/%m/%Y")
         except Exception as ex:
             logging.error(ex)
+        disease_list = [d.lower() for d in doc['disease_disorder']]
+        if 'infection' in disease_list:
+            continue
         if time_period <= date_obj <= today:
             diseases_counter.update(doc['disease_disorder'])
 
@@ -147,6 +150,9 @@ for doc in location_documents:
             date_obj = datetime.strptime(date_str, "%d/%m/%Y")
         except Exception as ex:
             logging.error(ex)
+        location_list = [l.lower() for l in doc['locations']]
+        if 'hospital' in location_list:
+            continue
         if time_period <= date_obj <= today:
             locations_counter.update(doc['locations'])
 
