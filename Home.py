@@ -20,7 +20,9 @@ def filter_documents(documents, timespan):
                 logging.error(ex)
     
     try:
-        if timespan == 'this month':
+        if timespan == 'this week':
+            start_date = datetime.now() - relativedelta(days=7)
+        elif timespan == 'this month':
             start_date = datetime.now().replace(day=1)
         elif timespan == 'past 3 months':
             start_date = datetime.now() - relativedelta(months=3)
@@ -174,7 +176,7 @@ def main():
         st.write('Select date range: ')
     with col2:
         timespan = st.selectbox(
-            "Select Timespan:", ['this month', 'past 3 months', 'past 6 months', 'past 1 year', 'all time'],
+            "Select Timespan:", ['this week', 'this month', 'past 3 months', 'past 6 months', 'past 1 year', 'all time'],
             label_visibility='collapsed',
             disabled=False,
             key='articles_time_option'
