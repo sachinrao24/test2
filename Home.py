@@ -30,6 +30,8 @@ def filter_documents(documents, timespan):
             start_date = datetime.now() - relativedelta(months=6)
         elif timespan == 'past 1 year':
             start_date = datetime.now() - relativedelta(years=1)
+        elif timespan == 'all time':
+            start_date = datetime.now() - relativedelta(years=100)
         
         if start_date:
             filtered_documents = [doc for doc in documents if ('datetime_object' in doc and doc['datetime_object'] >= start_date)]
