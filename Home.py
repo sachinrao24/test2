@@ -161,7 +161,7 @@ def sort_and_display(documents):
             continue
 
 def main():
-    st.set_page_config(page_title='Precision Health EBS', page_icon='static\favicon-32x32-1.png')
+    st.set_page_config(page_title='Precision Health EBS', page_icon='/static/favicon-32x32-1.png')
     st.title("**:violet[Precision Health]**")
     st.title("Event Based Surveillance")
 
