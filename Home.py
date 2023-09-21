@@ -162,8 +162,18 @@ def sort_and_display(documents):
 
 def main():
     st.set_page_config(page_title='Precision Health EBS', page_icon='static/favicon-32x32-1.png')
-    st.title("**:violet[Precision Health]**")
-    st.title("Event Based Surveillance")
+    title_style = '''
+        <link href="https://db.onlinewebfonts.com/c/7ccc732353a266bee0d99b75cf08e134?family=Helvetica+83+Black+Extended" rel="stylesheet">
+        <h1 style=
+                "font-family: 'Helvetica 83 Black Extended';
+                font-weight: bolder;
+                font-stretch: ultra-expanded;
+                color: #3687B6;">
+            Precision Health
+        </h1>
+        <h1>Event Based Surveillance</h1>
+    '''
+    st.markdown(title_style, unsafe_allow_html=True)
 
     load_dotenv()
     processed_collection = str(os.environ.get("MONGODB_PROCESSED_COLLECTION"))
