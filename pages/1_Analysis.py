@@ -92,13 +92,13 @@ for doc in disease_documents:
     if isinstance(date_str, str):
         try:
             date_obj = datetime.strptime(date_str, "%d/%m/%Y")
+            disease_list = [d.lower() for d in doc['disease_disorder']]
+            if 'infection' in disease_list:
+                continue
+            if time_period <= date_obj <= today:
+                diseases_counter.update(doc['disease_disorder'])
         except Exception as ex:
             logging.error(ex)
-        disease_list = [d.lower() for d in doc['disease_disorder']]
-        if 'infection' in disease_list or 'death' in disease_list:
-            continue
-        if time_period <= date_obj <= today:
-            diseases_counter.update(doc['disease_disorder'])
 
 top_diseases = diseases_counter.most_common(number_of_common)
 
@@ -148,13 +148,13 @@ for doc in location_documents:
     if isinstance(doc['locations'], list) and isinstance(date_str, str):
         try:
             date_obj = datetime.strptime(date_str, "%d/%m/%Y")
+            location_list = [l.lower() for l in doc['locations']]
+            if 'hospital' in location_list:
+                continue
+            if time_period <= date_obj <= today:
+                locations_counter.update(doc['locations'])
         except Exception as ex:
             logging.error(ex)
-        location_list = [l.lower() for l in doc['locations']]
-        if 'hospital' in location_list:
-            continue
-        if time_period <= date_obj <= today:
-            locations_counter.update(doc['locations'])
 
 top_locations = locations_counter.most_common(number_of_common)
 
