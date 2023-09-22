@@ -50,6 +50,7 @@ diseases_counter = Counter()
 locations_counter = Counter()
 
 # Streamlit configuration
+st.set_page_config(page_title='Precision Health EBS', page_icon='static/favicon-32x32-1.png')
 col1, col2, col3, col4 = st.columns([1, 1.7, 5.5, 1.7])
 
 st.session_state.visibility = "hidden"
