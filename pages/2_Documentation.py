@@ -1,5 +1,6 @@
 import streamlit as st
 
+st.set_page_config(page_title='Precision Health EBS', page_icon='static/favicon-32x32-1.png')
 
 st.title('Entity terminology:')
 st.write('*Symptoms*- Refers to any symptoms of a disease identified in the text, such as “fever”, “cough”, etc.')
