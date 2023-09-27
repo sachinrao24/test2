@@ -231,7 +231,7 @@ def sort_and_display(documents):
 
 def main():
 
-    st.set_page_config(page_title='Precision Health EBS', page_icon='favicon-32x32-1.png')
+    st.set_page_config(page_title='Precision Health EBS', page_icon='static/favicon-32x32-1.png')
 
     title_style = '''
         <link href="https://db.onlinewebfonts.com/c/7ccc732353a266bee0d99b75cf08e134?family=Helvetica+83+Black+Extended" rel="stylesheet">
