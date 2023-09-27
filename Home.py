@@ -44,40 +44,48 @@ def group_documents_by_cluster(documents):
     clustered_documents = {}
 
     for doc in documents:
-        cluster_id = doc.get('cluster_id')
-        display_document = doc.get('display_document')
-        article_links = doc.get('article_links')
+        try:
+            cluster_id = doc.get('cluster_id')
+            display_document = doc.get('display_document')
+            article_links = doc.get('article_links')
 
-        if cluster_id not in clustered_documents:
-            clustered_documents[cluster_id] = {'display': None, 'links': []}
+            if cluster_id not in clustered_documents:
+                clustered_documents[cluster_id] = {'display': None, 'links': []}
 
-        if display_document == 'yes':
-            clustered_documents[cluster_id]['display'] = doc
-        else:
-            if article_links and isinstance(article_links, list):
-                clustered_documents[cluster_id]['links'].extend(article_links)
+            if display_document == 'yes':
+                clustered_documents[cluster_id]['display'] = doc
+            else:
+                if article_links and isinstance(article_links, list):
+                    clustered_documents[cluster_id]['links'].extend(article_links)
+        except Exception as ex:
+            logging.error(ex)
+            continue
 
     return clustered_documents
 
 def display_clustered_documents(clustered_documents):
     for cluster_id, cluster_data in clustered_documents.items():
-        display_doc = cluster_data['display']
-        links = cluster_data['links']
+        try:
+            display_doc = cluster_data['display']
+            links = cluster_data['links']
 
-        if display_doc:
-            st.write('Cluster ID:', cluster_id)
-            st.write('Display Document:')
-            st.write('Date:', display_doc.get('date'))
-            st.write('Sentiment Color:', display_doc.get('sentiment_color'))
-            # Add more display fields as needed
+            if display_doc:
+                st.write('Cluster ID:', cluster_id)
+                st.write('Display Document:')
+                st.write('Date:', display_doc.get('date'))
+                st.write('Sentiment Color:', display_doc.get('sentiment_color'))
+                # Add more display fields as needed
 
-            st.write('Full Article:', display_doc.get('article_links'))
+                st.write('Full Article:', display_doc.get('article_links'))
 
-            with st.expander('See similar articles'):
-                for link in links:
-                    st.markdown(f'- {link}')
+                with st.expander('See similar articles'):
+                    for link in links:
+                        st.markdown(f'- {link}')
 
-            st.divider()
+                st.divider()
+        except Exception as ex:
+            logging.error(ex)
+            continue
 
 def sort_and_display(documents):
     sorted_documents = []
@@ -239,39 +247,43 @@ def main():
     st.markdown(title_style, unsafe_allow_html=True)
     
     load_dotenv()
-    processed_collection = str(os.environ.get("MONGODB_PROCESSED_COLLECTION"))
-    mongodbhandler = MongoDBHandler(processed_collection)
 
-    query = {
-        'cluster_id': {
-            '$exists': True
-        },
-        'display_document': {
-            '$exists': True
+    try:
+        processed_collection = str(os.environ.get("MONGODB_PROCESSED_COLLECTION"))
+        mongodbhandler = MongoDBHandler(processed_collection)
+
+        query = {
+            'cluster_id': {
+                '$exists': True
+            },
+            'display_document': {
+                '$exists': True
+            }
         }
-    }
-    documents = list(mongodbhandler.read_data(query))
+        documents = list(mongodbhandler.read_data(query))
 
-    st.write()
+        st.write()
 
-    col1, col2, _ = st.columns([3, 4.5, 8])
-    
-    with col1:
-        st.write('Select date range: ')
-    with col2:
-        timespan = st.selectbox(
-            "Select Timespan:", ['this week', 'this month', 'past 3 months', 'past 6 months', 'past 1 year', 'all time'],
-            label_visibility='collapsed',
-            disabled=False,
-            key='articles_time_option'
-        )
-    
-    filtered_documents = filter_documents(documents, timespan)
-    sorted_documents = sort_and_display(filtered_documents)
+        col1, col2, _ = st.columns([3, 4.5, 8])
+        
+        with col1:
+            st.write('Select date range: ')
+        with col2:
+            timespan = st.selectbox(
+                "Select Timespan:", ['this week', 'this month', 'past 3 months', 'past 6 months', 'past 1 year', 'all time'],
+                label_visibility='collapsed',
+                disabled=False,
+                key='articles_time_option'
+            )
+        
+        filtered_documents = filter_documents(documents, timespan)
+        sorted_documents = sort_and_display(filtered_documents)
 
-    clustered_documents = group_documents_by_cluster(sorted_documents)
+        clustered_documents = group_documents_by_cluster(sorted_documents)
 
-    display_clustered_documents(clustered_documents)
+        display_clustered_documents(clustered_documents)
+    except Exception as ex:
+        logging.error(ex)
 
 if __name__ == "__main__":
     main()
