@@ -1,0 +1,8 @@
+huggingface_hub==0.22.2
+openai==1.16.2
+pymongo==4.3.3
+python-dotenv==1.0.1
+python_dateutil==2.9.0.post0
+requests==2.31.0
+st_pages==0.4.5
+streamlit==1.33.0
