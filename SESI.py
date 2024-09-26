@@ -2,14 +2,7 @@ import streamlit as st
 import numpy as np
 import pandas as pd
 
-
-embeddings_to_use = st.selectbox("Select Embeddings", options=["OpenAI", "HuggingFace"])
-if embeddings_to_use == "OpenAI":
-    df = pd.read_csv('rag_results_for_OpenAI_embeddings_0.55_vec_automerge_0.5_BM25.csv')
-elif embeddings_to_use == "HuggingFace":
-    df = pd.read_csv('rag_results_for_HuggingFace_embeddings_0.55_vec_automerge_0.5_BM25.csv')
-else:
-    st.error("Select proper embedding")
+df = pd.read_csv('rag_results_for_OpenAI_embeddings_0.55_vec_automerge_0.5_BM25.csv')
 
 data = []
 
