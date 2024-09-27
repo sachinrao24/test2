@@ -76,7 +76,7 @@ for index, row in df.iterrows():
 df = pd.DataFrame(data)
 
 st.write(f"Collected Data:")
-st.write(f"Embeddings used: {embeddings_to_use}")
+#st.write(f"Embeddings used: {embeddings_to_use}")
 st.dataframe(df)
 
 csv = df.to_csv(index=False)
