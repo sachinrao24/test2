@@ -83,6 +83,7 @@ csv = df.to_csv(index=False)
 st.download_button(
     label="Download data as CSV",
     data=csv,
-    file_name=f'user_feedback_data_{embeddings_to_use}.csv',
+    #file_name=f'user_feedback_data_{embeddings_to_use}.csv',
+    file_name=f'user_feedback_data.csv',
     mime='text/csv',
 )
